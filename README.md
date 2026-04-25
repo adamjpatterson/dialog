@@ -14,10 +14,10 @@ Dialog adopts the STT–TTS model. It orchestrates communication between the VoI
 
 - Extensible, modular framework
 - Concrete implementations for VoIP, STT, and TTS, plus abstract Agent classes for extension
-- Easily extended — implement any STT, TTS, or VoIP component of your choice
+- Easily extended - implement any STT, TTS, or VoIP component of your choice
 - Multithreaded deployments
 - Event-driven architecture
-- Isolated state — components exchange objects but never mutate objects held by other components
+- Isolated state - components exchange objects but never mutate objects held by other components
 
 ## Table of contents
 
@@ -93,7 +93,7 @@ You should now be able to import Dialog artifacts into your package.
 
 When a call is initiated, a `Gateway` (e.g., a Twilio Gateway) emits a `voip` event. The `voip` handler is called with a `VoIP` instance as its single argument. The `VoIP` instance handles the WebSocket connection that is set on it by the `Gateway`. In the `voip` handler, an instance of an `Agent` is constructed by passing a `VoIP`, `STT`, and `TTS` implementation into its constructor. The agent is started by calling its `activate` method. The `activate` method of the `Agent` instance connects the interfaces that comprise the application.
 
-An important characteristic of the architecture is that a _new_ instance (i.e., a `VoIP`, `STT`, `TTS`, and `Agent`) — is created for every call. This allows each instance to maintain state specific to its call.
+An important characteristic of the architecture is that a _new_ `VoIP`, `STT`, `TTS`, and `Agent` instance is created for every call. This allows each instance to maintain state specific to its call.
 
 Excerpted from `./examples/custom_twilio_voip_openai_agent/src/main.ts`.
 
@@ -145,7 +145,7 @@ A Dialog orchestration typically consists of one or more of: an **Agent** compon
 
 ##### Agent
 
-An **Agent** component is essential to assembling the external LLM, the **VoIP**, **STT**, and **TTS** implementations into a working whole. Dialog, as the _orchestration layer_, does not provide a concrete **Agent** implementation. Instead you are provided with an interface and abstract class that you can implement or subclass with your custom special tool calling logic. For example, an **Agent** will decide when to transfer a call; if the LLM determines the **User** intent is to be transferred, the **Agent** can carry out this intent by calling the `VoIP.transferTo` method — or it could circumvent the provided call transfer facilities entirely and make a direct call to the VoIP provider (e.g., Twilio, Telnyx, etc.) API. The point here is that very little architectural constraints should be imposed on the Agent; this ensures the extensibility of the architecture.
+An **Agent** component is essential to assembling the external LLM, the **VoIP**, **STT**, and **TTS** implementations into a working whole. Dialog, as the _orchestration layer_, does not provide a concrete **Agent** implementation. Instead you are provided with an interface and abstract class that you can implement or subclass with your custom special tool calling logic. For example, an **Agent** will decide when to transfer a call; if the LLM determines the **User** intent is to be transferred, the **Agent** can carry out this intent by calling the `VoIP.transferTo` method - or it could circumvent the provided call transfer facilities entirely and make a direct call to the VoIP provider (e.g., Twilio, Telnyx, etc.) API. The point here is that very little architectural constraints should be imposed on the Agent; this ensures the extensibility of the architecture.
 
 ##### STT
 
@@ -165,7 +165,7 @@ Dialog favors simplicity and accessibility over feature richness. Its architectu
 
 #### State
 
-Each component in a Dialog orchestration must not directly mutate the state of another component (e.g., VoIP, STT, TTS, or Agent). Components may emit messages and consume the messages of other components and they may hold references to each other; however the mutation of an object held by one component should _never_ directly mutate the state of an object held by another component. This is an important characteristic of Dialog components — they exhibit isolated state — each component may exchange objects with other components but never mutate them. For example, a VoIP component may emit a `Metadata` object that contains information about a given incoming call that is consumed by other components; however, _a subsequent mutation in the VoIP's `Metadata` must not mutate the `Metadata` in another component._
+Each component in a Dialog orchestration must not directly mutate the state of another component (e.g., VoIP, STT, TTS, or Agent). Components may emit messages and consume the messages of other components and they may hold references to each other; however the mutation of an object held by one component should _never_ directly mutate the state of an object held by another component. This is an important characteristic of Dialog components - they exhibit isolated state - each component may exchange objects with other components but never mutate them. For example, a VoIP component may emit a `Metadata` object that contains information about a given incoming call that is consumed by other components; however, _a subsequent mutation in the VoIP's `Metadata` must not mutate the `Metadata` in another component._
 
 This strict separation of concerns ensures that component state remains predictable and easy for a _human_ to reason about. **Likewise, the architecture is expected to be easy for LLMs to consume, as the LLM's attention can be focused on the pattern that is exhibited by the relevant component.**
 
@@ -353,7 +353,7 @@ export class TwilioCustomAgent extends OpenAIAgent<TwilioVoIP> {
 
 Dialog provides a simple multithreading implementation you can use. An [example](https://github.com/far-analytics/dialog/tree/main/examples/twilio_voip_openai_agent_threading) is provided that demonstrates a multithreaded deployment.
 
-A `Worker` is spun up for each call. VoIP events are propagated over a `MessageChannel` using the [Port Peer](https://github.com/far-analytics/port-peer) RPC-like facility. This approach ensures that any peculiarity that takes place in handling one call will not interfere with other concurrent calls. Another notable aspect of this approach is that it permits hot changes to the Agent (and the STT and TTS) code without interrupting calls that are already underway — new calls will pick up changes each time a `Worker` is spun up.
+A `Worker` is spun up for each call. VoIP events are propagated over a `MessageChannel` using the [Port Peer](https://github.com/far-analytics/port-peer) RPC-like facility. This approach ensures that any peculiarity that takes place in handling one call will not interfere with other concurrent calls. Another notable aspect of this approach is that it permits hot changes to the Agent (and the STT and TTS) code without interrupting calls that are already underway - new calls will pick up changes each time a `Worker` is spun up.
 
 In the excerpt below, a `TwilioVoIPWorker` is instantiated on each call.
 
