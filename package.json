@@ -16,37 +16,41 @@
     "LICENSE",
     "package.json"
   ],
+  "workspaces": [
+    "tests/*"
+  ],
   "scripts": {
     "clean": "rm -rf ./dist/*",
     "build": "tsc --build .",
+    "watch": "tsc --watch",
     "clean:build": "npm run clean && npm run build",
-    "lint": "npx eslint .",
-    "format": "npx prettier --write .",
+    "format": "prettier --write .",
     "format:lint": "npm run format && npm run lint",
-    "watch": "tsc --watch"
+    "lint": "eslint src",
+    "lint:all": "eslint ."
   },
   "engines": {
     "npm": ">=10.1.0",
     "node": ">=20.9.0"
   },
   "dependencies": {
-    "@deepgram/sdk": "^3.11.2",
-    "openai": "^4.89.0",
-    "@far-analytics/port-peer": "^1.0.0",
-    "streams-logger": "^3.0.0",
-    "twilio": "^5.8.0",
-    "ws": "^8.18.1"
+    "@deepgram/sdk": "^3.13.0",
+    "@far-analytics/port-peer": "^1.0.2",
+    "openai": "^4.104.0",
+    "streams-logger": "^3.1.4",
+    "twilio": "^6.1.0",
+    "ws": "^8.21.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.37.0",
-    "@stylistic/eslint-plugin": "^5.4.0",
-    "@types/node": "^20.11.28",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/node": "^20.19.43",
     "@types/ws": "^8.18.1",
-    "eslint": "^9.37.0",
-    "globals": "^16.4.0",
-    "prettier": "^3.6.2",
+    "eslint": "^9.39.5",
+    "globals": "^16.5.0",
+    "prettier": "^3.9.6",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.46.1"
+    "typescript-eslint": "^8.67.0"
   },
   "repository": {
     "type": "git",
