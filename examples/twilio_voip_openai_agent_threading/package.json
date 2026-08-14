@@ -1,5 +1,5 @@
 {
-  "name": "custom_twilio_voip_openai_agent",
+  "name": "twilio_voip_openai_agent_threading",
   "version": "1.0.0",
   "main": "./dist/main.js",
   "scripts": {
@@ -17,11 +17,11 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.13.14",
-    "nodemon": "^3.1.10",
-    "typescript": "^5.8.2"
+    "nodemon": "^3.1.14",
+    "typescript": "^5.9.3"
   },
   "type": "module",
   "dependencies": {
-    "@far-analytics/dialog": "^1.0.0"
+    "@far-analytics/dialog": "^1.0.2"
   }
 }
