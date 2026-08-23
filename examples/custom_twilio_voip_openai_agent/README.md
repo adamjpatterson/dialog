@@ -14,7 +14,7 @@ This implementation binds a HTTPS server to a public interface - you may need to
 ### Clone the repository
 
 ```bash
-git clone https://github.com/far-analytics/dialog.git
+git clone https://github.com/adamjpatterson/dialog.git
 ```
 
 ### Install and build the Dialog package
@@ -100,4 +100,4 @@ The HTTPS server will bind to a public interface and the `TwilioGateway` will wa
 
 ## Support
 
-If you need help, please reference the [Support](https://github.com/far-analytics/dialog/tree/main?tab=readme-ov-file#support) section in the main README.md.
+If you need help, please reference the [Support](https://github.com/adamjpatterson/dialog/tree/main?tab=readme-ov-file#support) section in the main README.md.

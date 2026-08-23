@@ -48,7 +48,7 @@ These instructions describe how to clone the Dialog repository and build the pac
 #### Clone the repository.
 
 ```bash
-git clone https://github.com/far-analytics/dialog.git
+git clone https://github.com/adamjpatterson/dialog.git
 ```
 
 #### Change directory into the Dialog repository.
@@ -127,15 +127,15 @@ gateway.on("voip", (voip: TwilioVoIP) => {
 
 ## Examples
 
-Example implementations are provided in the [examples](https://github.com/far-analytics/dialog/tree/main/examples/) subpackages.
+Example implementations are provided in the [examples](https://github.com/adamjpatterson/dialog/tree/main/examples/) subpackages.
 
 ### _Custom Twilio VoIP, Deepgram STT, Cartesia TTS, and OpenAI Agent_
 
-In the [Custom Twilio VoIP, Deepgram STT, Cartesia TTS, and OpenAI Agent](https://github.com/far-analytics/dialog/tree/main/examples/custom_twilio_voip_openai_agent) example you will create a simple hypothetical Agent that prepends its messages with a timestamp and manages its conversation history.
+In the [Custom Twilio VoIP, Deepgram STT, Cartesia TTS, and OpenAI Agent](https://github.com/adamjpatterson/dialog/tree/main/examples/custom_twilio_voip_openai_agent) example you will create a simple hypothetical Agent that prepends its messages with a timestamp and manages its conversation history.
 
 ### _Twilio VoIP, Deepgram STT, Cartesia TTS, and OpenAI Agent (Threading)_
 
-In the [Twilio VoIP, Deepgram STT, Cartesia TTS, and OpenAI Agent (Threading)](https://github.com/far-analytics/dialog/tree/main/examples/twilio_voip_openai_agent_threading) example you will run each call session and Agent instance in a worker thread.
+In the [Twilio VoIP, Deepgram STT, Cartesia TTS, and OpenAI Agent (Threading)](https://github.com/adamjpatterson/dialog/tree/main/examples/twilio_voip_openai_agent_threading) example you will run each call session and Agent instance in a worker thread.
 
 ## Architecture
 
@@ -184,57 +184,57 @@ This strict separation of concerns ensures that component state remains predicta
 
 ## Implementations
 
-Dialog provides example [implementations](https://github.com/far-analytics/dialog/tree/main/src/implementations) for each of the artifacts that comprise a VoIP-Agent application. You can use a packaged implementation as-is, subclass it, or implement your own. If you choose to implement a custom implementation, you can use one of the provided [interfaces](https://github.com/far-analytics/dialog/tree/main/src/interfaces).
+Dialog provides example [implementations](https://github.com/adamjpatterson/dialog/tree/main/src/implementations) for each of the artifacts that comprise a VoIP-Agent application. You can use a packaged implementation as-is, subclass it, or implement your own. If you choose to implement a custom implementation, you can use one of the provided [interfaces](https://github.com/adamjpatterson/dialog/tree/main/src/interfaces).
 
 ### VoIP
 
-#### [Twilio](https://github.com/far-analytics/dialog/tree/main/src/implementations/voip/twilio) <sup><sup>[↗](https://twilio.com/)</sup></sup>
+#### [Twilio](https://github.com/adamjpatterson/dialog/tree/main/src/implementations/voip/twilio) <sup><sup>[↗](https://twilio.com/)</sup></sup>
 
 - Twilio request validation
 - Recording status
 - Transcript status
 - Speech interruption
 
-#### [Telnyx](https://github.com/far-analytics/dialog/tree/main/src/implementations/voip/telnyx) <sup><sup>[↗](https://telnyx.com/)</sup></sup> (coming soon)
+#### [Telnyx](https://github.com/adamjpatterson/dialog/tree/main/src/implementations/voip/telnyx) <sup><sup>[↗](https://telnyx.com/)</sup></sup> (coming soon)
 
 An implementation similar to Twilio is planned. A placeholder exists under `src/implementations/voip/telnyx/`.
 
 ### Speech to text (STT)
 
-#### [Deepgram](https://github.com/far-analytics/dialog/tree/main/src/implementations/stt/deepgram) <sup><sup>[↗](https://deepgram.com/)</sup></sup>
+#### [Deepgram](https://github.com/adamjpatterson/dialog/tree/main/src/implementations/stt/deepgram) <sup><sup>[↗](https://deepgram.com/)</sup></sup>
 
 - Voice activity detection (VAD) events
 
-#### [OpenAI](https://github.com/far-analytics/dialog/tree/main/src/implementations/stt/openai) <sup><sup>[↗](https://openai.com/)</sup></sup>
+#### [OpenAI](https://github.com/adamjpatterson/dialog/tree/main/src/implementations/stt/openai) <sup><sup>[↗](https://openai.com/)</sup></sup>
 
 - Voice activity detection (VAD) events
 - Semantic VAD
 
 ### Text to speech (TTS)
 
-#### [Cartesia](https://github.com/far-analytics/dialog/tree/main/src/implementations/tts/cartesia) <sup><sup>[↗](https://cartesia.ai/)</sup></sup>
+#### [Cartesia](https://github.com/adamjpatterson/dialog/tree/main/src/implementations/tts/cartesia) <sup><sup>[↗](https://cartesia.ai/)</sup></sup>
 
 - Configurable voice
 
-#### [ElevenLabs](https://github.com/far-analytics/dialog/tree/main/src/implementations/tts/elevenlabs) <sup><sup>[↗](https://elevenlabs.io/)</sup></sup>
+#### [ElevenLabs](https://github.com/adamjpatterson/dialog/tree/main/src/implementations/tts/elevenlabs) <sup><sup>[↗](https://elevenlabs.io/)</sup></sup>
 
 - Configurable voice
 
 ### Agent
 
-#### [OpenAI](https://github.com/far-analytics/dialog/tree/main/src/implementations/agent/abstract/openai) <sup><sup>[↗](https://openai.com/)</sup></sup>
+#### [OpenAI](https://github.com/adamjpatterson/dialog/tree/main/src/implementations/agent/abstract/openai) <sup><sup>[↗](https://openai.com/)</sup></sup>
 
-- An abstract [Agent implementation](https://github.com/far-analytics/dialog/blob/main/src/implementations/agent/abstract/openai/openai_agent.ts) is provided that uses the [OpenAI](https://platform.openai.com/docs/overview) API.
+- An abstract [Agent implementation](https://github.com/adamjpatterson/dialog/blob/main/src/implementations/agent/abstract/openai/openai_agent.ts) is provided that uses the [OpenAI](https://platform.openai.com/docs/overview) API.
 
 ## Custom Implementations
 
-Dialog provides concrete `VoIP`, `STT`, and `TTS` implementations and an abstract `Agent` implementation. You can use a provided implementation _as-is_, subclass it, or choose an interface and implement your own. If you plan to implement your own `VoIP`, `STT`, `Agent`, or `TTS`, [interfaces](https://github.com/far-analytics/dialog/tree/main/src/interfaces) are provided for each component of the application.
+Dialog provides concrete `VoIP`, `STT`, and `TTS` implementations and an abstract `Agent` implementation. You can use a provided implementation _as-is_, subclass it, or choose an interface and implement your own. If you plan to implement your own `VoIP`, `STT`, `Agent`, or `TTS`, [interfaces](https://github.com/adamjpatterson/dialog/tree/main/src/interfaces) are provided for each component of the application.
 
 ### Custom Agents
 
 A custom `Agent` implementation will allow you to facilitate tool calling, conversation history, and other nuances.
 
-You can extend the provided `OpenAIAgent` class, as in the example below, or just implement the `Agent` interface. The straight-forward `openai_agent.ts` [implementation](https://github.com/far-analytics/dialog/blob/main/src/implementations/agent/abstract/openai/openai_agent.ts) can be used as a guide.
+You can extend the provided `OpenAIAgent` class, as in the example below, or just implement the `Agent` interface. The straight-forward `openai_agent.ts` [implementation](https://github.com/adamjpatterson/dialog/blob/main/src/implementations/agent/abstract/openai/openai_agent.ts) can be used as a guide.
 
 #### A custom `Agent` based on `openai_agent.ts`.
 
@@ -351,9 +351,9 @@ export class TwilioCustomAgent extends OpenAIAgent<TwilioVoIP> {
 
 ## Multithreading
 
-Dialog provides a simple multithreading implementation you can use. An [example](https://github.com/far-analytics/dialog/tree/main/examples/twilio_voip_openai_agent_threading) is provided that demonstrates a multithreaded deployment.
+Dialog provides a simple multithreading implementation you can use. An [example](https://github.com/adamjpatterson/dialog/tree/main/examples/twilio_voip_openai_agent_threading) is provided that demonstrates a multithreaded deployment.
 
-A `Worker` is spun up for each call. VoIP events are propagated over a `MessageChannel` using the [Port Peer](https://github.com/far-analytics/port-peer) RPC-like facility. This approach ensures that any peculiarity that takes place in handling one call will not interfere with other concurrent calls. Another notable aspect of this approach is that it permits hot changes to the Agent (and the STT and TTS) code without interrupting calls that are already underway - new calls will pick up changes each time a `Worker` is spun up.
+A `Worker` is spun up for each call. VoIP events are propagated over a `MessageChannel` using the [Port Peer](https://github.com/adamjpatterson/port-peer) RPC-like facility. This approach ensures that any peculiarity that takes place in handling one call will not interfere with other concurrent calls. Another notable aspect of this approach is that it permits hot changes to the Agent (and the STT and TTS) code without interrupting calls that are already underway - new calls will pick up changes each time a `Worker` is spun up.
 
 In the excerpt below, a `TwilioVoIPWorker` is instantiated on each call.
 
@@ -976,6 +976,6 @@ There are a lot of great VoIP-Agent orchestration implementations out there. Thi
 
 ## Support
 
-For feature requests or issues, please open an [issue](https://github.com/far-analytics/dialog/issues) or contact the authors.
+For feature requests or issues, please open an [issue](https://github.com/adamjpatterson/dialog/issues) or contact the authors.
 
-- [Adam Patterson](https://github.com/adpatter)
+- [Adam Patterson](https://github.com/adamjpatterson)

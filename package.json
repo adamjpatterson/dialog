@@ -74,13 +74,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/far-analytics/dialog.git"
+    "url": "git+https://github.com/adamjpatterson/dialog.git"
   },
   "author": "FAR Analytics & Research",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/far-analytics/dialog/issues"
+    "url": "https://github.com/adamjpatterson/dialog/issues"
   },
-  "homepage": "https://github.com/far-analytics/dialog#readme",
+  "homepage": "https://github.com/adamjpatterson/dialog#readme",
   "type": "module"
 }
