@@ -31,7 +31,7 @@
     }
   },
   "files": [
-    "dist/**",
+    "dist/**/*",
     "README.md",
     "LICENSE",
     "package.json"
@@ -47,7 +47,9 @@
     "format": "prettier --write .",
     "format:lint": "npm run format && npm run lint",
     "lint": "eslint src",
-    "lint:all": "eslint ."
+    "lint:all": "eslint .",
+    "check": "npm run lint:all && npm run build",
+    "prepack": "npm run clean:build"
   },
   "engines": {
     "npm": ">=10.1.0",
