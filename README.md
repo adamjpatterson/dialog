@@ -17,7 +17,7 @@ Dialog adopts the STT–TTS model. It orchestrates communication between the VoI
 - Easily extended - implement any STT, TTS, or VoIP component of your choice
 - Multithreaded deployments
 - Event-driven architecture
-- Isolated state - components exchange objects but never mutate objects held by other components
+- Isolated state - components exchange data while keeping state ownership local and avoiding dependencies on mutations made by other components
 
 ## Table of contents
 
@@ -165,9 +165,9 @@ Dialog favors simplicity and accessibility over feature richness. Its architectu
 
 #### State
 
-Each component in a Dialog orchestration must not directly mutate the state of another component (e.g., VoIP, STT, TTS, or Agent). Components may emit messages and consume the messages of other components and they may hold references to each other; however the mutation of an object held by one component should _never_ directly mutate the state of an object held by another component. This is an important characteristic of Dialog components - they exhibit isolated state - each component may exchange objects with other components but never mutate them. For example, a VoIP component may emit a `Metadata` object that contains information about a given incoming call that is consumed by other components; however, _a subsequent mutation in the VoIP's `Metadata` must not mutate the `Metadata` in another component._
+Each component in a Dialog orchestration owns and manages its own state (e.g., VoIP, STT, TTS, or Agent). Components may emit messages and consume messages from other components, and they may hold references to each other; however, components are not designed to rely on, or intentionally mutate, state owned by another component. Implementations commonly create updated state snapshots when incorporating incoming metadata or messages. For example, a VoIP component may emit a `Metadata` object containing information about an incoming call that is consumed by other components; the VoIP implementation incorporates metadata updates into its own state rather than relying on consumers to mutate that state.
 
-This strict separation of concerns ensures that component state remains predictable and easy for a _human_ to reason about. **Likewise, the architecture is expected to be easy for LLMs to consume, as the LLM's attention can be focused on the pattern that is exhibited by the relevant component.**
+This separation of concerns ensures that component state remains predictable and easy for a _human_ to reason about. **Likewise, the architecture is expected to be easy for LLMs to consume, as the LLM's attention can be focused on the pattern that is exhibited by the relevant component.**
 
 #### Data flow
 
