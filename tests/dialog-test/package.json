@@ -1,0 +1,21 @@
+{
+  "name": "@far-analytics/dialog-test",
+  "version": "1.0.0",
+  "description": "Formal tests for Dialog.",
+  "main": "./dist/main.js",
+  "scripts": {
+    "clean": "rm -rf ./dist/*",
+    "build": "tsc --build .",
+    "clean:build": "npm run clean && npm run build",
+    "test": "npm run clean:build && node --test ./dist/main.js"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "typescript": "^5.9.3"
+  }
+}
