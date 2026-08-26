@@ -4,5 +4,6 @@ import { VoIP } from "./voip.js";
 export interface TwilioVoIP extends VoIP<TwilioMetadata, TranscriptStatus> {
   startRecording: () => Promise<void>;
   stopRecording: () => Promise<void>;
+  removeRecording: () => Promise<void>;
   startTranscript: () => Promise<void>;
 }
