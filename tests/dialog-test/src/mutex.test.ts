@@ -13,7 +13,7 @@ const deferred = <T>(): { promise: Promise<T>; resolve: (value: T) => void } => 
 await suite("Mutex", async () => {
   await test("runs the first call immediately and queues later calls in order.", async () => {
     const mutex = new Mutex();
-    const releaseFirst = deferred<void>();
+    const releaseFirst = deferred<undefined>();
     const events: string[] = [];
 
     const first = mutex.call("work", async () => {
@@ -22,18 +22,18 @@ await suite("Mutex", async () => {
       events.push("first:end");
       return "first";
     });
-    const second = mutex.call("work", async () => {
+    const second = mutex.call("work", () => {
       events.push("second");
-      return "second";
+      return Promise.resolve("second");
     });
-    const third = mutex.call("work", async () => {
+    const third = mutex.call("work", () => {
       events.push("third");
-      return "third";
+      return Promise.resolve("third");
     });
 
     await Promise.resolve();
     assert.deepStrictEqual(events, ["first:start"]);
-    releaseFirst.resolve();
+    releaseFirst.resolve(undefined);
 
     assert.strictEqual(await first, "first");
     assert.strictEqual(await second, "second");
@@ -43,7 +43,7 @@ await suite("Mutex", async () => {
 
   await test("keeps different marks independent.", async () => {
     const mutex = new Mutex();
-    const release = deferred<void>();
+    const release = deferred<undefined>();
     const events: string[] = [];
 
     const first = mutex.call("one", async () => {
@@ -51,36 +51,38 @@ await suite("Mutex", async () => {
       await release.promise;
       events.push("one:end");
     });
-    const second = mutex.call("two", async () => {
+    const second = mutex.call("two", () => {
       events.push("two");
+      return Promise.resolve();
     });
 
     await second;
     assert.deepStrictEqual(events, ["one:start", "two"]);
-    release.resolve();
+    release.resolve(undefined);
     await first;
   });
 
   await test("releases a mark when the protected call rejects.", async () => {
     const mutex = new Mutex();
-    await assert.rejects(mutex.call("work", async () => Promise.reject(new Error("failure"))), /failure/);
+    await assert.rejects(mutex.call("work", () => Promise.reject(new Error("failure"))), /failure/);
 
     let called = false;
-    await mutex.call("work", async () => {
+    await mutex.call("work", () => {
       called = true;
+      return Promise.resolve();
     });
     assert.strictEqual(called, true);
   });
 
   await test("rejects calls that exceed the configured queue size.", async () => {
     const mutex = new Mutex({ queueSizeLimit: 1 });
-    const release = deferred<void>();
+    const release = deferred<undefined>();
 
-    const first = mutex.call("work", async () => release.promise);
-    const second = mutex.call("work", async () => undefined);
-    await assert.rejects(mutex.call("work", async () => undefined), /Queue size limit exceeded for work/);
+    const first = mutex.call("work", () => release.promise);
+    const second = mutex.call("work", () => Promise.resolve());
+    await assert.rejects(mutex.call("work", () => Promise.resolve()), /Queue size limit exceeded for work/);
 
-    release.resolve();
+    release.resolve(undefined);
     await Promise.all([first, second]);
   });
 });

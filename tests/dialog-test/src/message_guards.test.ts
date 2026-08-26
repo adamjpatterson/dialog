@@ -32,14 +32,14 @@ import {
 } from "../../../dist/implementations/voip/twilio/types.js";
 
 await suite("Provider message guards", async () => {
-  await test("recognizes Deepgram message types.", async () => {
+  await test("recognizes Deepgram message types.", () => {
     assert.strictEqual(isResultsMessage({ type: "Results" }), true);
     assert.strictEqual(isSpeechStartedMessage({ type: "SpeechStarted" }), true);
     assert.strictEqual(isUtteranceEndMessage({ type: "UtteranceEnd" }), true);
     assert.strictEqual(isResultsMessage({ type: "SpeechStarted" }), false);
   });
 
-  await test("recognizes OpenAI transcription message types.", async () => {
+  await test("recognizes OpenAI transcription message types.", () => {
     assert.strictEqual(isCompletedWebSocketMessage({ type: "conversation.item.input_audio_transcription.completed" }), true);
     assert.strictEqual(isSpeechStartedWebSocketMessage({ type: "input_audio_buffer.speech_started" }), true);
     assert.strictEqual(
@@ -50,7 +50,7 @@ await suite("Provider message guards", async () => {
     assert.strictEqual(isCompletedWebSocketMessage({ type: "conversation.item.created" }), false);
   });
 
-  await test("recognizes Cartesia message types.", async () => {
+  await test("recognizes Cartesia message types.", () => {
     const context_id = "00000000-0000-0000-0000-000000000001" as `${string}-${string}-${string}-${string}-${string}`;
     assert.strictEqual(isChunkWebSocketMessage({ type: "chunk", context_id }), true);
     assert.strictEqual(isTimestampsWebSocketMessage({ type: "timestamps", context_id }), true);
@@ -59,14 +59,14 @@ await suite("Provider message guards", async () => {
     assert.strictEqual(isDoneWebSocketMessage({ type: "chunk", context_id }), false);
   });
 
-  await test("recognizes ElevenLabs message types.", async () => {
+  await test("recognizes ElevenLabs message types.", () => {
     const contextId = "00000000-0000-0000-0000-000000000001" as `${string}-${string}-${string}-${string}-${string}`;
     assert.strictEqual(isAudioOutputWebSocketMessage({ isFinal: null, contextId }), true);
     assert.strictEqual(isFinalOutputWebSocketMessage({ isFinal: true, contextId }), true);
     assert.strictEqual(isAudioOutputWebSocketMessage({ isFinal: true, contextId }), false);
   });
 
-  await test("recognizes Twilio body and WebSocket message types.", async () => {
+  await test("recognizes Twilio body and WebSocket message types.", () => {
     assert.strictEqual(isCallMetadata({ CallSid: "call", To: "+1", From: "+2" }), true);
     assert.strictEqual(isRecordingStatus({ CallSid: "call", RecordingStatus: "completed", RecordingSid: "recording" }), true);
     assert.strictEqual(isTranscriptStatus({ CallSid: "call", TranscriptionSid: "transcription" }), true);
