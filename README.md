@@ -424,7 +424,7 @@ Use these exports in order to emit structured logs across the library. See `stre
 
 ### The StreamBuffer class
 
-#### new StreamBuffer(options, writableOptions)
+#### new StreamBuffer(options?, writableOptions?)
 
 - options `<StreamBufferOptions>`
   - bufferSizeLimit `<number>` Optionally specify a maximum buffer size in bytes. **Default: `1e6`**
