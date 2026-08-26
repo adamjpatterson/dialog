@@ -232,7 +232,7 @@ export class TwilioGateway extends EventEmitter<TwilioGatewayEvents> {
   };
 }
 
-interface WebSocketListenerOptions {
+export interface WebSocketListenerOptions {
   webSocket: ws.WebSocket;
   twilioGateway: TwilioGateway;
   callSidToTwilioVoIP: Map<string, TwilioVoIP>;
