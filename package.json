@@ -44,6 +44,7 @@
     "build": "tsc --build .",
     "watch": "tsc --watch",
     "clean:build": "npm run clean && npm run build",
+    "test": "npm run clean:build && npm run test --workspace tests/dialog-test",
     "format": "prettier --write .",
     "format:lint": "npm run format && npm run lint",
     "lint": "eslint src",
