@@ -55,6 +55,7 @@ export abstract class OpenAIAgent<VoIPT extends VoIP<never, never, VoIPEvents<ne
     stream: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>,
     allowInterrupt = true
   ): Promise<string> => {
+    this.stream = stream;
     try {
       let assistantMessage = "";
       if (!allowInterrupt) {
@@ -68,6 +69,9 @@ export abstract class OpenAIAgent<VoIPT extends VoIP<never, never, VoIPEvents<ne
       }
       return assistantMessage;
     } finally {
+      if (this.stream === stream) {
+        this.stream = undefined;
+      }
       if (!allowInterrupt) {
         this.dispatches.delete(uuid);
       }
