@@ -30,6 +30,7 @@ Dialog adopts the STT–TTS model. It orchestrates communication between the VoI
 - [Multithreading](#multithreading)
 - [API](#api)
 - [Troubleshooting](#troubleshooting)
+- [Tests](#tests)
 - [Alternatives](#alternatives)
 - [Support](#support)
 
@@ -1006,6 +1007,22 @@ To run the other standard checks independently:
 ```bash
 npm run build
 npm run lint:all
+```
+
+### Live integration tests
+
+The repository also includes two live Twilio integration applications. These are separate from the formal test suite and require access to external services, valid credentials, and a publicly reachable HTTPS endpoint for Twilio callbacks. They may incur provider usage charges.
+
+- `tests/test_twilio` runs the Twilio, Deepgram, Cartesia, and OpenAI voice-agent flow in a single Node.js process.
+- `tests/test_twilio_threading` runs the same flow with the VoIP bridge in the main process and the agent session in a worker thread.
+
+Both applications load environment variables from the repository root `.env` file and require at least `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `DEEPGRAM_API_KEY`, `CARTESIA_API_KEY`, and `OPENAI_API_KEY`. They also require paths to an HTTPS `KEY_FILE` and `CERT_FILE`, plus a `WEBHOOK_URL` that Twilio can reach. The live test workspaces require Node.js `>=20.19.0`.
+
+Run either application from the repository root with:
+
+```bash
+npm run test --workspace tests/test_twilio
+npm run test --workspace tests/test_twilio_threading
 ```
 
 ## Alternatives
