@@ -965,6 +965,49 @@ _public_ **OpenAIConversationHistory**
 
 A conversation history array suitable for OpenAI chat APIs.
 
+## Tests
+
+The formal test suite is located in `tests/dialog-test`. It covers the deterministic framework components and orchestration behavior; it does not require credentials or network access to Twilio, OpenAI, Deepgram, Cartesia, or ElevenLabs.
+
+### How to run the test suite
+
+The test suite requires Node.js `>=20.9.0` and npm `>=10.1.0`.
+
+#### Clone the repository.
+
+```bash
+git clone https://github.com/adamjpatterson/dialog
+```
+
+#### Change directory into the root of the repository.
+
+```bash
+cd dialog
+```
+
+#### Install Dialog dependencies.
+
+```bash
+npm install
+```
+
+#### Run the tests.
+
+This command performs a clean build of the library, builds the test workspace, and runs the tests with Node.js’s built-in test runner.
+
+```bash
+npm test
+```
+
+#### Build and lint.
+
+To run the other standard checks independently:
+
+```bash
+npm run build
+npm run lint:all
+```
+
 ## Alternatives
 
 There are a lot of great VoIP-Agent orchestration implementations out there. This is a selection of implementations that I have experience with.
