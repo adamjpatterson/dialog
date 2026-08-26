@@ -7,6 +7,7 @@ import { Message } from "../../../dist/interfaces/message/message.js";
 import { VoIP, VoIPEvents } from "../../../dist/interfaces/voip/voip.js";
 import { STT, STTEvents } from "../../../dist/interfaces/stt/stt.js";
 import { TTS, TTSEvents } from "../../../dist/interfaces/tts/tts.js";
+import { log, SyslogLevel } from "../../../dist/index.js";
 
 class FakeVoIP extends EventEmitter<VoIPEvents<never, never>> implements VoIP<never, never> {
   public posted: Message[] = [];
@@ -167,21 +168,27 @@ await suite("OpenAIAgent orchestration", async () => {
   });
 
   await test("disposes all components when a component emits an error.", () => {
-    for (const source of ["voip", "stt", "tts"] as const) {
-      const { agent, voip, stt, tts } = createAgent();
-      agent.activate();
-      const error = new Error(`${source} failure`);
-      if (source == "voip") {
-        voip.emit("error", error);
-      } else if (source == "stt") {
-        stt.emit("error", error);
-      } else {
-        tts.emit("error", error);
-      }
+    const previousLevel = log.level;
+    log.setLevel(SyslogLevel.EMERG);
+    try {
+      for (const source of ["voip", "stt", "tts"] as const) {
+        const { agent, voip, stt, tts } = createAgent();
+        agent.activate();
+        const error = new Error(`${source} failure`);
+        if (source == "voip") {
+          voip.emit("error", error);
+        } else if (source == "stt") {
+          stt.emit("error", error);
+        } else {
+          tts.emit("error", error);
+        }
 
-      assert.strictEqual(voip.disposed, 1);
-      assert.strictEqual(stt.disposed, 1);
-      assert.strictEqual(tts.disposed, 1);
+        assert.strictEqual(voip.disposed, 1);
+        assert.strictEqual(stt.disposed, 1);
+        assert.strictEqual(tts.disposed, 1);
+      }
+    } finally {
+      log.setLevel(previousLevel);
     }
   });
 
