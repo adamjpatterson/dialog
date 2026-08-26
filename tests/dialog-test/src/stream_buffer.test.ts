@@ -1,6 +1,6 @@
 import { test, suite } from "node:test";
 import * as assert from "node:assert/strict";
-import { StreamBuffer } from "../../../dist/commons/stream_buffer.js";
+import { StreamBuffer } from "@far-analytics/dialog";
 
 const collect = async (buffer: StreamBuffer, chunks: (string | Buffer)[]): Promise<Buffer> => {
   for (const chunk of chunks) {

@@ -1,6 +1,6 @@
 import { test, suite } from "node:test";
 import * as assert from "node:assert/strict";
-import { Mutex } from "../../../dist/commons/mutex.js";
+import { Mutex } from "@far-analytics/dialog";
 
 const deferred = <T>(): { promise: Promise<T>; resolve: (value: T) => void } => {
   let resolve!: (value: T) => void;

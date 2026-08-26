@@ -2,12 +2,20 @@ import { test, suite } from "node:test";
 import * as assert from "node:assert/strict";
 import { randomUUID, UUID } from "node:crypto";
 import { EventEmitter } from "node:events";
-import { OpenAIAgent } from "../../../dist/implementations/agent/abstract/openai/openai_agent.js";
-import { Message } from "../../../dist/interfaces/message/message.js";
-import { VoIP, VoIPEvents } from "../../../dist/interfaces/voip/voip.js";
-import { STT, STTEvents } from "../../../dist/interfaces/stt/stt.js";
-import { TTS, TTSEvents } from "../../../dist/interfaces/tts/tts.js";
-import { log, SyslogLevel } from "../../../dist/index.js";
+import { OpenAI } from "openai";
+import type { Stream } from "openai/streaming.mjs";
+import {
+  Message,
+  OpenAIAgent,
+  STT,
+  STTEvents,
+  TTS,
+  TTSEvents,
+  VoIP,
+  VoIPEvents,
+  log,
+  SyslogLevel,
+} from "@far-analytics/dialog";
 
 class FakeVoIP extends EventEmitter<VoIPEvents<never, never>> implements VoIP<never, never> {
   public posted: Message[] = [];
@@ -84,6 +92,18 @@ class TestAgent extends OpenAIAgent<FakeVoIP> {
   public responseData = "deterministic response";
   public holdInference = false;
   public inferenceGate = deferred<undefined>();
+
+  public dispatchTestStream = (
+    uuid: UUID,
+    stream: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>
+  ): Promise<string> => {
+    this.activeMessages.add(uuid);
+    return this.dispatchStream(uuid, stream);
+  };
+
+  public hasStream = (stream: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>): boolean => {
+    return this.stream === stream;
+  };
 
   public inference = async (message: Message): Promise<void> => {
     this.received.push(message);
@@ -165,6 +185,77 @@ await suite("OpenAIAgent orchestration", async () => {
 
     assert.deepStrictEqual(tts.aborted, []);
     assert.deepStrictEqual(voip.aborted, []);
+  });
+
+  await test("dispose aborts and clears a stream registered by dispatchStream.", async () => {
+    const { agent } = createAgent();
+    const uuid = randomUUID();
+    const controller = new AbortController();
+    const stream = {
+      controller,
+      [Symbol.asyncIterator](): AsyncIterator<never> {
+        return {
+          next: () =>
+            new Promise<IteratorResult<never>>((resolve) => {
+              controller.signal.addEventListener(
+                "abort",
+                () => {
+                  resolve({ done: true, value: undefined });
+                },
+                { once: true }
+              );
+            }),
+        };
+      },
+    } as unknown as Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
+
+    const dispatch = agent.dispatchTestStream(uuid, stream);
+    await Promise.resolve();
+    assert.strictEqual(agent.hasStream(stream), true);
+    assert.strictEqual(controller.signal.aborted, false);
+
+    agent.dispose();
+    await dispatch;
+    assert.strictEqual(controller.signal.aborted, true);
+    assert.strictEqual(agent.hasStream(stream), false);
+  });
+
+  await test("clears the stream reference after normal stream completion.", async () => {
+    const { agent, tts } = createAgent();
+    const uuid = randomUUID();
+    const stream = {
+      controller: new AbortController(),
+      async *[Symbol.asyncIterator](): AsyncGenerator<never> {
+        await Promise.resolve();
+        yield { choices: [{ delta: { content: "" }, finish_reason: null }] } as never;
+      },
+    } as unknown as Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
+
+    const dispatch = agent.dispatchTestStream(uuid, stream);
+    assert.strictEqual(agent.hasStream(stream), true);
+    await dispatch;
+
+    assert.strictEqual(agent.hasStream(stream), false);
+    assert.deepStrictEqual(tts.posted, []);
+  });
+
+  await test("clears the stream reference when stream iteration fails.", async () => {
+    const { agent } = createAgent();
+    const uuid = randomUUID();
+    const error = new Error("stream failure");
+    const stream = {
+      controller: new AbortController(),
+      [Symbol.asyncIterator](): AsyncIterator<never> {
+        return {
+          next: () => Promise.reject(error),
+        };
+      },
+    } as unknown as Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
+
+    const dispatch = agent.dispatchTestStream(uuid, stream);
+    assert.strictEqual(agent.hasStream(stream), true);
+    await assert.rejects(dispatch, /stream failure/);
+    assert.strictEqual(agent.hasStream(stream), false);
   });
 
   await test("disposes all components when a component emits an error.", () => {

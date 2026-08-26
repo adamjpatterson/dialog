@@ -1,35 +1,27 @@
 import { test, suite } from "node:test";
 import * as assert from "node:assert/strict";
 import {
-  isResultsMessage,
-  isSpeechStartedMessage,
-  isUtteranceEndMessage,
-} from "../../../dist/implementations/stt/deepgram/types.js";
-import {
+  isCallMetadata,
   isCompletedWebSocketMessage,
   isConversationItemCreatedWebSocketMessage,
-  isInputAudioTranscriptionDeltaWebSocketMessage,
-  isSpeechStartedWebSocketMessage,
-} from "../../../dist/implementations/stt/openai/types.js";
-import {
   isChunkWebSocketMessage,
   isDoneWebSocketMessage,
   isErrorWebSocketMessage,
-  isTimestampsWebSocketMessage,
-} from "../../../dist/implementations/tts/cartesia/types.js";
-import {
   isAudioOutputWebSocketMessage,
   isFinalOutputWebSocketMessage,
-} from "../../../dist/implementations/tts/elevenlabs/types.js";
-import {
-  isCallMetadata,
+  isInputAudioTranscriptionDeltaWebSocketMessage,
   isMarkWebSocketMessage,
   isMediaWebSocketMessage,
+  isResultsMessage,
   isRecordingStatus,
+  isSpeechStartedMessage,
+  isSpeechStartedWebSocketMessage,
   isStartWebSocketMessage,
   isStopWebSocketMessage,
+  isTimestampsWebSocketMessage,
   isTranscriptStatus,
-} from "../../../dist/implementations/voip/twilio/types.js";
+  isUtteranceEndMessage,
+} from "@far-analytics/dialog";
 
 await suite("Provider message guards", async () => {
   await test("recognizes Deepgram message types.", () => {
