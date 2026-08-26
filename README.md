@@ -1021,7 +1021,14 @@ Both applications load environment variables from the repository root `.env` fil
 Run either application from the repository root with:
 
 ```bash
+npm run build
 npm run test --workspace tests/test_twilio
+```
+
+Or run the worker-thread variant with:
+
+```bash
+npm run build
 npm run test --workspace tests/test_twilio_threading
 ```
 
