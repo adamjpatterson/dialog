@@ -61,7 +61,7 @@ cd dialog
 #### Install the package dependencies.
 
 ```bash
-npm install && npm update
+npm install
 ```
 
 #### Build the Dialog package.
@@ -440,10 +440,10 @@ The accumulated buffer contents.
 
 ### The Mutex class
 
-#### new Mutex()
+#### new Mutex(options?)
 
 - options `<MutexOptions>`
-  - queueSizeLimit `<number>` A hard limit imposed on all mark queues. `mutex.call` will throw if this limit is exceeded.
+  - queueSizeLimit `<number>` A hard limit imposed on all mark queues. `mutex.call` rejects if this limit is exceeded.
 
 Use a `Mutex` in order to serialize asynchronous calls by key.
 
@@ -590,6 +590,8 @@ _public_ **webSocketListener.startMessage**
 
 Use a `TwilioVoIP` in order to send synthesized audio back to Twilio, emit inbound media frames, and control the call (transfer, hangup, recording, and transcription).
 
+`TwilioVoIPInterface` is the structural contract for custom Twilio-compatible VoIP implementations.
+
 _public_ **twilioVoIP.post(message)**
 
 - message `<Message>` Post base64‑encoded audio media back to Twilio over the Media Stream. When `done` is `true`, a marker is sent to allow downstream dispatch tracking.
@@ -657,14 +659,14 @@ Helper types and type guards for Twilio webhook and Media Stream payloads.
 - **isRecordingStatus(message)** Returns: `<message is RecordingStatus>`
 - **TranscriptStatus** Extends `Body` with Twilio transcription status fields.
 - **isTranscriptStatus(message)** Returns: `<message is TranscriptStatus>`
-- **WebSocketMessage** `{ event: "start" | "media" | "stop" | "mark" }`
+- **TwilioWebSocketMessage** `{ event: "start" | "media" | "stop" | "mark" }`
 - **StartWebSocketMessage, MediaWebSocketMessage, StopWebSocketMessage, MarkWebSocketMessage** Specific Twilio Media Stream messages.
 - **isStartWebSocketMessage / isMediaWebSocketMessage / isStopWebSocketMessage / isMarkWebSocketMessage** Type guards for the above.
 - **TwilioMetadata** `Partial<StartWebSocketMessage> & Partial<CallMetadata>` A merged, partial metadata shape for convenience.
 
 ### Agent abstractions
 
-#### new OpenAIAgent\<VoIPT extends VoIP\<never, never\>\>(options)
+#### abstract OpenAIAgent\<VoIPT extends VoIP\<never, never\>\>(options)
 
 - options `<OpenAIAgentOptions<VoIPT>>`
   - voip `<VoIPT>` The telephony transport.
@@ -674,7 +676,7 @@ Helper types and type guards for Twilio webhook and Media Stream payloads.
   - model `<string>` OpenAI Chat Completions model identifier.
   - queueSizeLimit `<number>` A queueSizeLimit to be passed to the implementation's `Mutex` constructor.
 
-Use an `OpenAIAgent` as a base class in order to build streaming, interruptible LLM agents that connect STT input, TTS output, and a VoIP transport. Subclasses implement `inference` to call OpenAI APIs and stream back responses.
+Extend `OpenAIAgent` in order to build streaming, interruptible LLM agents that connect STT input, TTS output, and a VoIP transport. It cannot be instantiated directly; subclasses implement `inference` to call OpenAI APIs and stream back responses.
 
 _public (abstract)_ **openAIAgent.inference(message)**
 
@@ -690,7 +692,7 @@ _public_ **openAIAgent.post(message)**
 
 Returns: `<void>`
 
-_public_ **openAIAgent.dispatchStream(uuid, stream, allowInterrupt?)**
+_protected_ **openAIAgent.dispatchStream(uuid, stream, allowInterrupt?)**
 
 - uuid `<UUID>` The message correlation identifier.
 - stream `<Stream<OpenAI.Chat.Completions.ChatCompletionChunk>>` The OpenAI streaming iterator.
@@ -700,7 +702,7 @@ Returns: `<Promise<string>>`
 
 Stream assistant tokens to TTS. When `allowInterrupt` is `false`, waits for a downstream `"message_dispatched"` before returning.
 
-_public_ **openAIAgent.dispatchMessage(message, allowInterrupt?)**
+_protected_ **openAIAgent.dispatchMessage(message, allowInterrupt?)**
 
 - message `<Message>` A pre‑composed assistant message to play via TTS.
 - allowInterrupt `<boolean>` Whether to allow VAD‑driven interruption. **Default: `true`**
@@ -934,6 +936,10 @@ _public_ **twilioVoIPProxy.stopRecording()**
 
 Returns: `<Promise<void>>`
 
+_public_ **twilioVoIPProxy.removeRecording()**
+
+Returns: `<Promise<void>>`
+
 _public_ **twilioVoIPProxy.startTranscript()**
 
 Returns: `<Promise<void>>`
@@ -956,7 +962,7 @@ _public_ **Session**
 
 Discriminated unions for WebSocket messages are also provided with type guards:
 
-- `WebSocketMessage` and `isCompletedWebSocketMessage`, `isSpeechStartedWebSocketMessage`, `isConversationItemCreatedWebSocketMessage`.
+- `OpenAISTTWebSocketMessage` and `isCompletedWebSocketMessage`, `isSpeechStartedWebSocketMessage`, `isConversationItemCreatedWebSocketMessage`, `isInputAudioTranscriptionDeltaWebSocketMessage`.
 
 ### OpenAI agent types
 
