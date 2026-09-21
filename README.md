@@ -170,7 +170,7 @@ Each component in a Dialog orchestration owns and manages its own state (e.g., V
 
 Implementations should create updated state snapshots when incorporating incoming metadata or messages. For example, a VoIP component may emit a `Metadata` object containing information about an incoming call that is consumed by other components; the VoIP implementation incorporates metadata updates into its own state rather than relying on consumers to mutate that state.
 
-This separation of concerns ensures that component state remains predictable and easy for a _human_ to reason about. **Likewise, the architecture is expected to be easy for LLMs to consume, as the LLM's attention can be focused on the pattern that is exhibited by the relevant component.**
+This separation of concerns ensures that component state remains predictable and easy for a _human_ to reason about. **Likewise, the architecture is expected to be easy for LLMs to consume, as the LLM's attention can be focused on the pattern that is exhibited by the relevant component without having to reason about mutations to state owned by other components.**
 
 #### Data flow
 
