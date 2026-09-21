@@ -162,7 +162,7 @@ The **VoIP** component handles the incoming call, transcriptions, recordings, an
 
 ### Overview
 
-Dialog favors simplicity and accessibility over feature richness. Its architecture should meet all the requirements of a typical VoIP-Agent application where many Users interact with a set of Agents. Although Dialog doesn't presently support concepts like "rooms", the simplicity and extensibility of its architecture should lend to even more advanced implementations.
+Dialog favors simplicity and accessibility over feature richness. Its architecture should meet all the requirements of a typical VoIP-Agent application where many Users interact with a set of Agents. Although Dialog doesn't presently support concepts like "rooms", the simplicity and extensibility of its architecture should lend to more advanced implementations.
 
 #### State
 
