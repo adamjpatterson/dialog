@@ -4,7 +4,9 @@ A modular framework for building VoIP-Agent applications.
 
 ## Introduction
 
-Dialog is an orchestration layer for VoIP-Agent applications. Two _common_ VoIP-Agent models exist today: the Speech-to-Speech (S2S) model and the Speech-to-Text with Text-to-Speech (STT–TTS) model. Dialog adopts the STT–TTS model. It orchestrates communication between the VoIP, STT, TTS, and Agent components. The framework provides concrete implementations of VoIP, STT, and TTS classes, along with abstract Agent classes designed for subclassing.
+Dialog is an orchestration layer for VoIP-Agent applications. Two _common_ VoIP-Agent models exist today: the Speech-to-Speech (S2S) model and the Speech-to-Text with Text-to-Speech (STT–TTS) model. Both approaches involve tradeoffs.
+
+Dialog adopts the STT–TTS model. It orchestrates communication between the VoIP, STT, TTS, and Agent components. The framework provides concrete implementations of VoIP, STT, and TTS classes, along with abstract Agent classes designed for subclassing.
 
 ### Features
 
